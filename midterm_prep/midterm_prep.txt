@@ -1,0 +1,192 @@
+peterson's solution
+// assuming load and stor operations are atomic
+
+while(true){
+    flag[i] = true;
+    turn = j;
+    while(flag[j] && turn == j){
+        // spin
+    }
+    // critical section
+
+    // end of critical section
+    turn[i] = false
+
+}
+Peterson's algorithm struggles from instruction re-ordering, if flag[i] = true and turn = j is reordered, then this will break mutual exclusion
+
+hardware solutions, uniprocessors could disable interrupts, but not scalable for multi processor systems
+
+// atomic instructions 
+bool test_and_set(boolean* target){
+    boolean rv = *target
+    *target = true
+    return rv
+}
+
+int compare_and_swap(int* value, int expected, int new_value){
+    int temp = *value;
+
+    if(*value == expected){
+        *value = new_value;
+    }
+
+    return temp;
+}
+important note: normal locking using compare and swap doesn't meet the requirements for bounded wait
+
+algorithm that meets the requirement for bounded wait
+do{
+    waiting[i] = true
+    key = 1
+    while(waiting[i] && key == 1){
+        key = compare_and_swap(&lock, 0, 1)
+    }
+    waiting[i] = false
+    // critical section
+
+    j = (i + 1)%n
+    while(j != i && waiting[j]){
+        j = (j+1)%n
+    }
+
+    if j==1{
+        lock = 0
+    }else{
+        waiting[j] = false
+    }
+
+
+}
+
+atomic instruction to incrememnt a variable using CAS
+
+func increment(atomic_int* var){
+
+    int temp;
+    do{
+        temp = *var;
+    }while(temp != compare_and_swap(var, temp, temp+1))
+
+}
+
+// mutex locks
+
+acquire(){
+    while(!compare_and_swap(&avilable, true, false));
+
+}
+
+release(){
+    test_and_set(&available, false)
+
+}
+
+:: HOW TO USE SEMAPHORES TO RUN A PROCESS P1 BEFORE P2
+
+synch = Semapohre(0)
+
+T1{
+P1()
+synch.Signal()
+}
+
+T2{
+    synch.Wait()
+    P2()
+}
+
+:: defining a semapohre
+
+class Semaphore{
+    int value;
+    List<Process> processList;
+
+    // constructur
+    public Semaphore(int count){
+        value = count;
+    }
+
+    public void Wait(){
+        value--;
+    
+        if(value < 0){
+            processList.Add(//current thread)
+            sleep()
+        }
+    }
+    public void Signal(){
+        value++;
+        if(value <= 0){
+            process = processList.GetTail()
+            porcess.Start()
+        }
+    }
+}
+
+
+
+mutex = new Semapohre(0)
+full = new Semaphore(n)
+empty = new Semaphore(0)
+
+
+writer(){
+    wait(empty)
+    wait(mutex)
+
+    // write whatever the fuck you want
+    signal(mutex)
+    signal(full)
+
+
+}
+
+
+reader(){
+    wait(full)
+    wait(mutex)
+    // read whatever the fuck you want
+    signal(mutex)
+    signal(empty)
+
+}
+
+/*
+    reader writer problem
+*/
+
+
+rw_mutex = 0
+mutex = 1
+
+no_of_readers = 0
+
+
+writer(){
+    wait(rw_mutex)
+    // write baby
+    signal(rw_mutex)
+
+}
+
+
+reader(){
+
+    wait(mutex)
+    if(no_of_readers == 0){
+        // acquire the rw_mutex
+        wait(rw_mutex)
+    }
+    no_of_reader++
+    signal(mutex)
+
+    // do your fucking reading
+
+    wait(mutex)
+    if(no_of_readers == 1){
+        signal(rw_mutex)
+    }
+    no_of_reader--;
+    signal(mutex)
+}

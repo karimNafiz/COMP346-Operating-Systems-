@@ -1,0 +1,15 @@
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.AssemblyInfoInputs.cache
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.AssemblyInfo.cs
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.csproj.CoreCompileInputs.cache
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.sourcelink.json
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\bin\Debug\net8.0\kickback_code_test.exe
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\bin\Debug\net8.0\kickback_code_test.deps.json
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\bin\Debug\net8.0\kickback_code_test.runtimeconfig.json
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\bin\Debug\net8.0\kickback_code_test.dll
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\bin\Debug\net8.0\kickback_code_test.pdb
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.dll
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\refint\kickback_code_test.dll
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.pdb
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\kickback_code_test.genruntimeconfig.cache
+C:\Users\karim\University Courses\COMP346\COMP346-Operating-Systems-\kickback_code_test\obj\Debug\net8.0\ref\kickback_code_test.dll
