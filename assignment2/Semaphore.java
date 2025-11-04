@@ -20,19 +20,22 @@ public class Semaphore {
         /*
          * second fix, the following intially was this.value <= 0
          * changed it to this.value < 0
+         * 
+         * also removing the while loop as a second fix, I will get back to this later
          */
-        while (this.value < 0)
+        
+        try
         {
-            try
-            {
+            if(this.value < 0){
                 wait();
             }
-            catch(InterruptedException e)
-            {
-                System.out.println ("Semaphore::Wait() - caught InterruptedException: " + e.getMessage() );
-                e.printStackTrace();
-            }
         }
+        catch(InterruptedException e)
+        {
+            System.out.println ("Semaphore::Wait() - caught InterruptedException: " + e.getMessage() );
+            e.printStackTrace();
+        }
+    
     }
     public synchronized void Signal()
     {

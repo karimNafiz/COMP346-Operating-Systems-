@@ -1,3 +1,4 @@
+
 public class CharStack {
     /*
         * Some class constants.
@@ -38,6 +39,10 @@ public class CharStack {
     /*
     * Picks a value from the top without modifying the stack
     */
+    /*
+     * 
+     * caution, the top could be modified but a concurrent thread
+     */
     public static char pick() throws CharStackEmptyException
     {
         if (iTop == -1)
