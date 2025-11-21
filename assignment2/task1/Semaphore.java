@@ -1,8 +1,9 @@
-
+package task1;
 public class Semaphore {
     private int value;
     public Semaphore(int value)
     {
+            // add the negative check
             this.value = value;
     }
     public Semaphore()

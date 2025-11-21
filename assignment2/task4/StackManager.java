@@ -1,3 +1,5 @@
+package task4;
+
 
 
 public class StackManager
@@ -19,6 +21,13 @@ public class StackManager
     private static Semaphore stackEmpty;
     private static Semaphore stackLock;
 
+    private static Semaphore producerIndexLock;
+
+
+    private static Semaphore[] producerFinishSignal;
+
+    private static int producerIndex = -1;
+
 
 
 
@@ -28,22 +37,30 @@ public class StackManager
         // Some initial stats...
         try
         {
-            stack = new CharStack(20);
+            stack = new CharStack(Integer.parseInt(argv[0]));
             System.out.println("Main thread starts executing.");
             System.out.println("Initial value of top = " + stack.getTop() + ".");
             System.out.println("Initial value of stack top = " + stack.pick() + ".");
             System.out.println("Main thread will now fork several threads.");
             
-            System.out.println("stack.getTop()+1 "+(stack.getTop()+1));
+            // System.out.println("stack.getTop()+1 "+(stack.getTop()+1));
 
-            System.out.println("getSize() - getTop() "+(stack.getSize() - (stack.getTop()+1)));
+            // System.out.println("getSize() - getTop() "+(stack.getSize() - (stack.getTop()+1)));
 
             stackFull = new Semaphore(stack.getTop()+1);
-            stackEmpty = new Semaphore(stack.getSize() - stack.getTop());
+            stackEmpty = new Semaphore(stack.getSize() - (stack.getTop()+1));
             stackLock = new Semaphore(1);
+            producerIndexLock = new Semaphore(1);
+
+            producerFinishSignal = new Semaphore[2];
+            producerFinishSignal[0] = new Semaphore(0);
+            producerFinishSignal[1] = new Semaphore(0);
+
+            //System.exit(0);
         }
         catch(CharStackInvalidSizeException e){
             System.out.println(e.getMessage());
+            System.exit(1);
         }
         catch(CharStackEmptyException e)
         {
@@ -51,6 +68,7 @@ public class StackManager
             System.out.println("Message : " + e.getMessage());
             System.out.println("Stack Trace : ");
             e.printStackTrace();
+            System.exit(1);
         }
         /*
         * The birth of threads
@@ -98,10 +116,10 @@ public class StackManager
         }
         catch(Exception e)
         {
-                    System.out.println("Caught exception: " + e.getClass().getName());
-                    System.out.println("Message : " + e.getMessage());
-                    System.out.println("Stack Trace : ");
-                    e.printStackTrace();
+            System.out.println("Caught exception: " + e.getClass().getName());
+            System.out.println("Message : " + e.getMessage());
+            System.out.println("Stack Trace : ");
+            e.printStackTrace();
         }
     } // main()
         /*
@@ -113,21 +131,39 @@ public class StackManager
             public void run()
             {
                 System.out.println ("Consumer thread [TID=" + this.iTID + "] starts executing.");
+                
+                producerFinishSignal[0].P();
+                producerFinishSignal[1].P();
+
+                boolean isSignalEmpty = true;
+
                 for (int i = 0; i < StackManager.iThreadSteps; i++)  {
                         try{
                             stackFull.P();
                             stackLock.P();
-                            System.out.println("Consumer thread [TID=" + this.iTID + "] acquired lock");
+                            
+                            isSignalEmpty = true;
+                            
+                            //System.out.println("Consumer thread [TID=" + this.iTID + "] acquired lock");
                             copy = CharStack.pop();
                             System.out.println("Consumer thread [TID=" + this.iTID + "] pops character =" + this.copy);
                         
-                        }catch(Exception e){
-                            // try again maybe
-                            System.out.println("exception e"+e.getMessage());
+                        }catch(CharStackEmptyException e){
+                            isSignalEmpty = false;
+                            i--;
+                        }
+                        catch(Exception e){
+
+                            //System.out.println("Consumer thread [TID=" + this.iTID + "] exception e"+e.getMessage());
+
+                            isSignalEmpty = true;
                             i--;
                         }finally{
                             System.out.println("Consumer thread [TID=" + this.iTID + "] released lock");
-                            stackEmpty.V();
+                            if(isSignalEmpty){
+
+                                stackEmpty.V();
+                            }
                             stackLock.V();
                         }
                 }
@@ -142,13 +178,22 @@ public class StackManager
             private char block; // block to be returned
             public void run()
             {
+                int index=0;
+                try{
+                    producerIndexLock.P();
+                    index = ++producerIndex;
+
+                }finally{
+                    producerIndexLock.V();
+                    //System.out.println ("Producer thread [TID=" + this.iTID + "] producer index "+index);
+                }
                 
                 System.out.println ("Producer thread [TID=" + this.iTID + "] starts executing.");
                 for (int i = 0; i < StackManager.iThreadSteps; i++)  {
                     try{
                         stackEmpty.P();
                         stackLock.P();
-                        System.out.println ("Producer thread [TID=" + this.iTID + "] acquired lock.");
+                        //System.out.println ("Producer thread [TID=" + this.iTID + "] acquired lock.");
                         char top = CharStack.pick();
                         block = (char) (stack.pick() + 1);
                         CharStack.push(block);
@@ -158,17 +203,21 @@ public class StackManager
                     }catch(Exception e){
                         // we just need to try 
                         // not sure what to do 
-                        System.out.println("exception e"+e.getMessage());
+                        //System.out.println("Producer Thread [TID=" + this.iTID + "]exception e"+e.getMessage());
                         i--;
                     }finally{
-                        System.out.println ("Producer thread [TID=" + this.iTID + "] released lock");
-                        stackLock.V();
+                        //System.out.println ("Producer thread [TID=" + this.iTID + "] released lock");
                         stackFull.V();
+                        stackLock.V();
                     }
 
 
                 }
                 System.out.println("Producer thread [TID=" + this.iTID + "] terminates.");
+                
+                // need to signal twice because we have two consumers
+                producerFinishSignal[index].V();
+                producerFinishSignal[index].V();
                 
 
             }
@@ -190,7 +239,7 @@ public class StackManager
                             }
                             System.out.println();
                         }catch(Exception e){
-                            System.out.println("exception e"+e.getMessage());
+                            //System.out.println("Char Stack Prober exception e"+e.getMessage());
                             continue;
                         }finally{
                             stackLock.V();

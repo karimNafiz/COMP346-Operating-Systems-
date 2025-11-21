@@ -190,3 +190,23 @@ reader(){
     no_of_reader--;
     signal(mutex)
 }
+
+
+/*
+    what happens in monitors in java
+*/
+
+if a Thread tries to enter a synchronized method
+it is put into an empty set
+
+when the thread holding the lock exists a synced method, it realeases the lock 
+
+if you call wait()
+
+you are put into wait state
+
+if someone calls notify, then you are put in the entry state
+
+when the thread that called notify leaves the synced method
+
+the thread that was waiting acquires the lock and continues from the line where wait() was called

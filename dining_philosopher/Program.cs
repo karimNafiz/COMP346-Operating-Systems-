@@ -239,3 +239,58 @@ class Table
         Leave(toDrop);
     }
 }
+
+
+/*
+N = 5
+Semapohre seats = new Semaphore(4) // initially only four people can sit at the table
+// one semaphore for each chopstick, as only one person can hold a chopstick at the same time
+Semaphore[] chopsticks = new Semaphore[N-1]
+foreach(Semaphore sem in chopsticks){
+    sem = new Semaphore(1)
+}
+
+int Left(int i ){
+    return (i + 1)modN
+}
+
+int Right(int i){
+    return (i + N-1)modN
+}
+
+
+
+for(int i = 0;i < N;i++){
+
+    new Thread(TryEatThink(i))
+
+
+}
+
+
+
+void TryEatThink(int index){
+
+    seats.Wait() // wait to sit on the table
+
+    Think();
+
+    chopsticks[Left(index)].Wait() // try to pick up the left chopstick
+    chopsticks[Right(index)].Wait() // try to pick up the right chopstick
+
+    Eat();
+
+    chopsticks[Left(index)].Signal()
+    chopsticks[Right(index)].Signal()
+
+    seats.Signal()// release the lock so others can join
+
+
+}
+
+
+
+
+
+
+*/

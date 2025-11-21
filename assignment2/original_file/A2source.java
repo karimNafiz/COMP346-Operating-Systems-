@@ -19,12 +19,12 @@
 //                          try
 //                         {
 //                                wait();
-//                          }
+//                         }
 //                         catch(InterruptedException e)
 //                         {
 //                                  System.out.println ("Semaphore::Wait() - caught InterruptedException: " + e.getMessage() );
 //                                  e.printStackTrace();
-//                             }
+//                          }
 //                     }
 //                     /* this should be on the top of the function */
 //                     this.value--;    

@@ -1,3 +1,4 @@
+package task2;
 class CharStackEmptyException extends Exception
 {
            public CharStackEmptyException()
@@ -23,10 +24,13 @@ class CharStackInvalidSizeException extends Exception
           public CharStackInvalidSizeException (int piStackSize)
           {
                   super ("Invalid stack size specified: " + piStackSize);
-           }
+          }
 }
 
 class CharStackInvalidAceessException extends Exception
 {
-           // Fill it up yourself
+        public CharStackInvalidAceessException(){
+                super("trying to access invalid index of the char stack");
+        }
+           
 }

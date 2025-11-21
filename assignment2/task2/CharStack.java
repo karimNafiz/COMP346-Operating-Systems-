@@ -1,4 +1,4 @@
-
+package task2;
 public class CharStack {
     /*
         * Some class constants.
