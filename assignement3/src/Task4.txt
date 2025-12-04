@@ -1,0 +1,3 @@
+To avoid starvation of any philosopher wanting to eat I used a queue, 
+anytime a philosopher wants to eat, we add it to the queue, and check if it is on top of the queue, if not we wait
+the queue makes sure that a philosopher at max will have to wait n-1 times, where n is equal to the number of philosophers
